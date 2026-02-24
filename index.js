@@ -73,7 +73,7 @@ function requireNative() {
   } else if (process.platform === 'android') {
     if (process.arch === 'arm64') {
       try {
-        return require('./package-template.android-arm64.node')
+        return require('./WhCatMeme.android-arm64.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -89,7 +89,7 @@ function requireNative() {
       }
     } else if (process.arch === 'arm') {
       try {
-        return require('./package-template.android-arm-eabi.node')
+        return require('./WhCatMeme.android-arm-eabi.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -109,7 +109,7 @@ function requireNative() {
   } else if (process.platform === 'win32') {
     if (process.arch === 'x64') {
       try {
-        return require('./package-template.win32-x64-msvc.node')
+        return require('./WhCatMeme.win32-x64-msvc.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -125,7 +125,7 @@ function requireNative() {
       }
     } else if (process.arch === 'ia32') {
       try {
-        return require('./package-template.win32-ia32-msvc.node')
+        return require('./WhCatMeme.win32-ia32-msvc.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -141,7 +141,7 @@ function requireNative() {
       }
     } else if (process.arch === 'arm64') {
       try {
-        return require('./package-template.win32-arm64-msvc.node')
+        return require('./WhCatMeme.win32-arm64-msvc.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -160,7 +160,7 @@ function requireNative() {
     }
   } else if (process.platform === 'darwin') {
     try {
-      return require('./package-template.darwin-universal.node')
+      return require('./WhCatMeme.darwin-universal.node')
     } catch (e) {
       loadErrors.push(e)
     }
@@ -176,7 +176,7 @@ function requireNative() {
     }
     if (process.arch === 'x64') {
       try {
-        return require('./package-template.darwin-x64.node')
+        return require('./WhCatMeme.darwin-x64.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -192,7 +192,7 @@ function requireNative() {
       }
     } else if (process.arch === 'arm64') {
       try {
-        return require('./package-template.darwin-arm64.node')
+        return require('./WhCatMeme.darwin-arm64.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -212,7 +212,7 @@ function requireNative() {
   } else if (process.platform === 'freebsd') {
     if (process.arch === 'x64') {
       try {
-        return require('./package-template.freebsd-x64.node')
+        return require('./WhCatMeme.freebsd-x64.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -228,7 +228,7 @@ function requireNative() {
       }
     } else if (process.arch === 'arm64') {
       try {
-        return require('./package-template.freebsd-arm64.node')
+        return require('./WhCatMeme.freebsd-arm64.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -249,7 +249,7 @@ function requireNative() {
     if (process.arch === 'x64') {
       if (isMusl()) {
         try {
-          return require('./package-template.linux-x64-musl.node')
+          return require('./WhCatMeme.linux-x64-musl.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -265,7 +265,7 @@ function requireNative() {
         }
       } else {
         try {
-          return require('./package-template.linux-x64-gnu.node')
+          return require('./WhCatMeme.linux-x64-gnu.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -283,7 +283,7 @@ function requireNative() {
     } else if (process.arch === 'arm64') {
       if (isMusl()) {
         try {
-          return require('./package-template.linux-arm64-musl.node')
+          return require('./WhCatMeme.linux-arm64-musl.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -299,7 +299,7 @@ function requireNative() {
         }
       } else {
         try {
-          return require('./package-template.linux-arm64-gnu.node')
+          return require('./WhCatMeme.linux-arm64-gnu.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -317,7 +317,7 @@ function requireNative() {
     } else if (process.arch === 'arm') {
       if (isMusl()) {
         try {
-          return require('./package-template.linux-arm-musleabihf.node')
+          return require('./WhCatMeme.linux-arm-musleabihf.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -333,7 +333,7 @@ function requireNative() {
         }
       } else {
         try {
-          return require('./package-template.linux-arm-gnueabihf.node')
+          return require('./WhCatMeme.linux-arm-gnueabihf.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -351,7 +351,7 @@ function requireNative() {
     } else if (process.arch === 'loong64') {
       if (isMusl()) {
         try {
-          return require('./package-template.linux-loong64-musl.node')
+          return require('./WhCatMeme.linux-loong64-musl.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -367,7 +367,7 @@ function requireNative() {
         }
       } else {
         try {
-          return require('./package-template.linux-loong64-gnu.node')
+          return require('./WhCatMeme.linux-loong64-gnu.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -385,7 +385,7 @@ function requireNative() {
     } else if (process.arch === 'riscv64') {
       if (isMusl()) {
         try {
-          return require('./package-template.linux-riscv64-musl.node')
+          return require('./WhCatMeme.linux-riscv64-musl.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -401,7 +401,7 @@ function requireNative() {
         }
       } else {
         try {
-          return require('./package-template.linux-riscv64-gnu.node')
+          return require('./WhCatMeme.linux-riscv64-gnu.node')
         } catch (e) {
           loadErrors.push(e)
         }
@@ -418,7 +418,7 @@ function requireNative() {
       }
     } else if (process.arch === 'ppc64') {
       try {
-        return require('./package-template.linux-ppc64-gnu.node')
+        return require('./WhCatMeme.linux-ppc64-gnu.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -434,7 +434,7 @@ function requireNative() {
       }
     } else if (process.arch === 's390x') {
       try {
-        return require('./package-template.linux-s390x-gnu.node')
+        return require('./WhCatMeme.linux-s390x-gnu.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -454,7 +454,7 @@ function requireNative() {
   } else if (process.platform === 'openharmony') {
     if (process.arch === 'arm64') {
       try {
-        return require('./package-template.openharmony-arm64.node')
+        return require('./WhCatMeme.openharmony-arm64.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -470,7 +470,7 @@ function requireNative() {
       }
     } else if (process.arch === 'x64') {
       try {
-        return require('./package-template.openharmony-x64.node')
+        return require('./WhCatMeme.openharmony-x64.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -486,7 +486,7 @@ function requireNative() {
       }
     } else if (process.arch === 'arm') {
       try {
-        return require('./package-template.openharmony-arm.node')
+        return require('./WhCatMeme.openharmony-arm.node')
       } catch (e) {
         loadErrors.push(e)
       }
@@ -514,7 +514,7 @@ if (!nativeBinding || process.env.NAPI_RS_FORCE_WASI) {
   let wasiBinding = null
   let wasiBindingError = null
   try {
-    wasiBinding = require('./package-template.wasi.cjs')
+    wasiBinding = require('./WhCatMeme.wasi.cjs')
     nativeBinding = wasiBinding
   } catch (err) {
     if (process.env.NAPI_RS_FORCE_WASI) {
