@@ -1,5 +1,7 @@
 ﻿# WhCatMeme
 
+[![CI](https://github.com/ixbaicn/WhCatMeme/actions/workflows/CI.yml/badge.svg)](https://github.com/ixbaicn/WhCatMeme/actions/workflows/CI.yml)
+
 A production-focused Node native addon built with `napi-rs`, powered by Rust `meme_generator`.
 
 ## Highlights
@@ -12,23 +14,24 @@ A production-focused Node native addon built with `napi-rs`, powered by Rust `me
 - Standardized machine-readable error codes
 - Panic-safe Rust bridge to protect Node process stability
 
-## Installation
+## Build From Source
+
+This project is currently source-first (not published to npm yet).
 
 ```bash
-npm install WhCatMeme
+git clone https://github.com/ixbaicn/WhCatMeme.git
+cd WhCatMeme
+yarn install
+yarn build
 ```
 
-Or with yarn:
-
-```bash
-yarn add WhCatMeme
-```
+After build, use the local `index.js`/`index.d.ts` entry to consume the addon.
 
 ## Quick Start
 
 ```ts
 import { readFileSync, writeFileSync } from 'node:fs'
-import { MemeGenerator } from 'WhCatMeme'
+import { MemeGenerator } from './index'
 
 const meme = new MemeGenerator({
   dbPath: './data/whcatmeme.sqlite',

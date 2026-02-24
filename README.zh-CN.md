@@ -1,5 +1,7 @@
 ﻿# WhCatMeme
 
+[![CI](https://github.com/ixbaicn/WhCatMeme/actions/workflows/CI.yml/badge.svg)](https://github.com/ixbaicn/WhCatMeme/actions/workflows/CI.yml)
+
 `WhCatMeme` 是一个面向生产的 Node 原生扩展，基于 `napi-rs` 构建，底层引擎为 Rust `meme_generator`。
 
 ## 项目特性
@@ -12,23 +14,24 @@
 - 机器可读错误码标准化
 - Rust `panic` 隔离，保护 Node 进程稳定性
 
-## 安装
+## 从源码构建
+
+当前项目以源码方式使用（尚未发布到 npm）。
 
 ```bash
-npm install WhCatMeme
+git clone https://github.com/ixbaicn/WhCatMeme.git
+cd WhCatMeme
+yarn install
+yarn build
 ```
 
-或：
-
-```bash
-yarn add WhCatMeme
-```
+构建完成后，可直接通过本地 `index.js` / `index.d.ts` 入口使用扩展。
 
 ## 快速开始
 
 ```ts
 import { readFileSync, writeFileSync } from 'node:fs'
-import { MemeGenerator } from 'WhCatMeme'
+import { MemeGenerator } from './index'
 
 const meme = new MemeGenerator({
   dbPath: './data/whcatmeme.sqlite',

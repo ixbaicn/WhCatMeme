@@ -12,7 +12,7 @@ Parameters:
 
 Example:
 ```ts
-import { MemeGenerator } from 'WhCatMeme'
+import { MemeGenerator } from './index'
 
 const meme = new MemeGenerator({
   dbPath: './data/whcatmeme.sqlite',
@@ -203,7 +203,7 @@ Common codes:
 
 ```ts
 import { readFileSync } from 'node:fs'
-import { MemeGenerator } from 'WhCatMeme'
+import { MemeGenerator } from './index'
 
 const meme = new MemeGenerator()
 
