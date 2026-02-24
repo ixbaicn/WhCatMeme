@@ -8,11 +8,7 @@ use napi_derive::napi;
     target_os = "macos",
     any(target_arch = "x86_64", target_arch = "aarch64")
   ),
-  all(
-    target_os = "linux",
-    target_env = "gnu",
-    any(target_arch = "x86_64", target_arch = "aarch64")
-  )
+  all(target_os = "linux", target_env = "gnu", target_arch = "x86_64")
 ))]
 mod full_impl;
 
@@ -22,11 +18,7 @@ mod full_impl;
     target_os = "macos",
     any(target_arch = "x86_64", target_arch = "aarch64")
   ),
-  all(
-    target_os = "linux",
-    target_env = "gnu",
-    any(target_arch = "x86_64", target_arch = "aarch64")
-  )
+  all(target_os = "linux", target_env = "gnu", target_arch = "x86_64")
 ))]
 pub use full_impl::*;
 

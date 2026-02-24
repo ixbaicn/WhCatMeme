@@ -12,7 +12,7 @@ crate-type = ["cdylib"]
 napi = { version = "3.0.0", features = ["serde-json"] }
 napi-derive = "3.0.0"
 
-[target.'cfg(any(all(target_os = "windows", target_arch = "x86_64"), all(target_os = "macos", any(target_arch = "x86_64", target_arch = "aarch64")), all(target_os = "linux", target_env = "gnu", any(target_arch = "x86_64", target_arch = "aarch64"))))'.dependencies]
+[target.'cfg(any(all(target_os = "windows", target_arch = "x86_64"), all(target_os = "macos", any(target_arch = "x86_64", target_arch = "aarch64")), all(target_os = "linux", target_env = "gnu", target_arch = "x86_64")))'.dependencies]
 meme_generator = { version = "0.2.2", features = ["vendored"] }
 rusqlite = { version = "0.32.1", features = ["bundled"] }
 serde = { version = "1", features = ["derive"] }
