@@ -1,0 +1,3 @@
+[target.x86_64-pc-windows-msvc]
+# Keep default dynamic CRT to match available skia prebuilt binaries.
+# Enabling +crt-static makes skia fallback to source build more often on Windows.
