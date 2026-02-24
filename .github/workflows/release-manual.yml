@@ -2,7 +2,7 @@ name: Manual Release
 
 env:
   DEBUG: napi:*
-  APP_NAME: WhCatTimer
+  APP_NAME: WhCatMeme
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 
 on:
