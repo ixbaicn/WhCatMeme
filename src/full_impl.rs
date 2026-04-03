@@ -318,10 +318,7 @@ impl MemeGenerator {
   #[napi]
   pub fn get_meme_keys(&self, include_disabled: Option<bool>) -> Result<Vec<String>> {
     let include_disabled = include_disabled.unwrap_or(false);
-    let keys = get_meme_keys()
-      .into_iter()
-      .map(ToOwned::to_owned)
-      .collect::<Vec<_>>();
+    let keys = get_meme_keys();
     if include_disabled {
       return Ok(keys);
     }
