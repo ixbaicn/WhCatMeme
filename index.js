@@ -523,12 +523,19 @@ if (!nativeBinding || process.env.NAPI_RS_FORCE_WASI) {
   }
   if (!nativeBinding) {
     try {
-      wasiBinding = require('@napi-rs/package-template-wasm32-wasi')
+      wasiBinding = require('WhCatMeme-wasm32-wasip1-threads')
       nativeBinding = wasiBinding
-    } catch (err) {
-      if (process.env.NAPI_RS_FORCE_WASI) {
-        wasiBindingError.cause = err
-        loadErrors.push(err)
+    } catch (wasip1Err) {
+      loadErrors.push(wasip1Err)
+      try {
+        wasiBinding = require('WhCatMeme-wasm32-wasi')
+        nativeBinding = wasiBinding
+      } catch (wasiErr) {
+        loadErrors.push(wasiErr)
+        if (process.env.NAPI_RS_FORCE_WASI) {
+          wasiBindingError = wasiBindingError ?? wasip1Err
+          wasiBindingError.cause = wasiErr
+        }
       }
     }
   }

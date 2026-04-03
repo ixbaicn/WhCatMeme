@@ -11,7 +11,10 @@ const __wasi = new __WASI({
   version: 'preview1',
 })
 
-const __wasmUrl = new URL('./WhCatMeme.wasm32-wasi.wasm', import.meta.url).href
+const __wasmUrls = [
+  new URL('./WhCatMeme.wasm32-wasip1-threads.wasm', import.meta.url).href,
+  new URL('./WhCatMeme.wasm32-wasi.wasm', import.meta.url).href,
+]
 const __emnapiContext = __emnapiGetDefaultContext()
 
 
@@ -21,7 +24,18 @@ const __sharedMemory = new WebAssembly.Memory({
   shared: true,
 })
 
-const __wasmFile = await fetch(__wasmUrl).then((res) => res.arrayBuffer())
+let __wasmFile = null
+for (const __wasmUrl of __wasmUrls) {
+  const response = await fetch(__wasmUrl)
+  if (response.ok) {
+    __wasmFile = await response.arrayBuffer()
+    break
+  }
+}
+
+if (!__wasmFile) {
+  throw new Error('Cannot find WASI .wasm file for WhCatMeme')
+}
 
 const {
   instance: __napiInstance,

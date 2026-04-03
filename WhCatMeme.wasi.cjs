@@ -32,16 +32,38 @@ const __sharedMemory = new WebAssembly.Memory({
   shared: true,
 })
 
-let __wasmFilePath = __nodePath.join(__dirname, 'WhCatMeme.wasm32-wasi.wasm')
-const __wasmDebugFilePath = __nodePath.join(__dirname, 'WhCatMeme.wasm32-wasi.debug.wasm')
+const __wasmCandidates = [
+  {
+    release: __nodePath.join(__dirname, 'WhCatMeme.wasm32-wasip1-threads.wasm'),
+    debug: __nodePath.join(__dirname, 'WhCatMeme.wasm32-wasip1-threads.debug.wasm'),
+  },
+  {
+    release: __nodePath.join(__dirname, 'WhCatMeme.wasm32-wasi.wasm'),
+    debug: __nodePath.join(__dirname, 'WhCatMeme.wasm32-wasi.debug.wasm'),
+  },
+]
+let __wasmFilePath = null
 
-if (__nodeFs.existsSync(__wasmDebugFilePath)) {
-  __wasmFilePath = __wasmDebugFilePath
-} else if (!__nodeFs.existsSync(__wasmFilePath)) {
+for (const candidate of __wasmCandidates) {
+  if (__nodeFs.existsSync(candidate.debug)) {
+    __wasmFilePath = candidate.debug
+    break
+  }
+  if (__nodeFs.existsSync(candidate.release)) {
+    __wasmFilePath = candidate.release
+    break
+  }
+}
+
+if (!__wasmFilePath) {
   try {
-    __wasmFilePath = require.resolve('WhCatMeme-wasm32-wasi/WhCatMeme.wasm32-wasi.wasm')
+    __wasmFilePath = require.resolve('WhCatMeme-wasm32-wasip1-threads/WhCatMeme.wasm32-wasip1-threads.wasm')
   } catch {
-    throw new Error('Cannot find WhCatMeme.wasm32-wasi.wasm file, and WhCatMeme-wasm32-wasi package is not installed.')
+    try {
+      __wasmFilePath = require.resolve('WhCatMeme-wasm32-wasi/WhCatMeme.wasm32-wasi.wasm')
+    } catch {
+      throw new Error('Cannot find WASI .wasm file, and no compatible WASI package is installed.')
+    }
   }
 }
 
