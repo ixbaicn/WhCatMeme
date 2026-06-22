@@ -71,3 +71,4 @@ const {
 })
 export default __napiModule.exports
 export const MemeGenerator = __napiModule.exports.MemeGenerator
+export const plus100 = __napiModule.exports.plus100

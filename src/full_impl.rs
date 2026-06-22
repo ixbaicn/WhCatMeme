@@ -246,6 +246,10 @@ pub struct GenerateMemeResult {
   pub mime: String,
   pub used_images: u32,
   pub used_texts: u32,
+  /// True when this result was produced by the fallback preview path
+  /// (all normal candidates failed, so a random meme preview was generated instead).
+  /// When `true`, `used_images` and `used_texts` are both 0.
+  pub fallback: bool,
 }
 
 #[napi(object)]
@@ -255,6 +259,11 @@ pub struct RandomGenerateFilter {
   pub max_texts: Option<u32>,
   pub exclude_keys: Option<Vec<String>>,
   pub include_disabled: Option<bool>,
+  /// Preference type filter: "image" | "text" | "any".
+  /// When not set, inferred from input (images→"image", texts→"text", both/none→"any").
+  pub prefer_type: Option<String>,
+  /// Whether to allow preview fallback when all candidates fail. Default: true.
+  pub fallback_preview: Option<bool>,
 }
 
 #[napi(object)]
@@ -764,6 +773,8 @@ impl MemeGenerator {
       max_texts: None,
       exclude_keys: None,
       include_disabled: None,
+      prefer_type: None,
+      fallback_preview: None,
     });
 
     let exclude_keys = filters
@@ -784,70 +795,81 @@ impl MemeGenerator {
     let min_texts = filters.min_texts.unwrap_or(0);
     let max_texts = filters.max_texts.unwrap_or(u32::MAX);
     let include_disabled = filters.include_disabled.unwrap_or(false);
+    let fallback_preview = filters.fallback_preview.unwrap_or(true);
 
-    let mut candidates = Vec::new();
-    for meme in get_memes() {
-      let key = meme.key();
-      if exclude_keys.iter().any(|k| k == &key) {
-        continue;
-      }
-      let enabled = self.state_store.is_enabled(&key)?;
-      if !include_disabled && !enabled {
-        continue;
-      }
-      let info = meme.info();
-      let p = info.params;
-      if require_images && p.max_images == 0 {
-        continue;
-      }
-      if (p.max_texts as u32) < min_texts || (p.min_texts as u32) > max_texts {
-        continue;
-      }
-      if input_images < p.min_images as u32 || input_images > p.max_images as u32 {
-        continue;
-      }
-      if input_texts < p.min_texts as u32 || input_texts > p.max_texts as u32 {
-        continue;
-      }
-      candidates.push(key);
-    }
-
-    if candidates.is_empty() {
-      return Err(new_coded_error(
-        CODE_RANDOM_GENERATION_FAILED,
-        "no meme candidates matched the random filters".to_string(),
-        Status::InvalidArg,
-      ));
-    }
+    // Determine input type and preference
+    let input_type = match (input_images > 0, input_texts > 0) {
+      (true, false) => InputType::ImageOnly,
+      (false, true) => InputType::TextOnly,
+      (true, true) => InputType::Both,
+      (false, false) => InputType::None,
+    };
+    let prefer_type = resolve_prefer_type(input_type, filters.prefer_type.as_deref());
 
     let seed = SystemTime::now()
       .duration_since(UNIX_EPOCH)
       .map(|d| d.as_nanos() as usize)
       .unwrap_or(0);
-    let start = seed % candidates.len();
 
-    let mut last_error = None;
-    for i in 0..candidates.len() {
-      let key = candidates[(start + i) % candidates.len()].clone();
-      match generate_meme_by_parts(
-        &self.state_store,
-        &key,
-        &base_images,
-        &base_texts,
-        &base_options,
-      ) {
-        Ok(result) => return Ok(result),
-        Err(err) => {
-          last_error = Some(err.to_string());
-        }
-      }
+    // When the user provides no images and no texts, the most useful behavior
+    // is to skip straight to fallback preview — there are very few memes that
+    // accept 0 images + 0 texts, so Level 1/2 almost always yield nothing.
+    if input_type == InputType::None && fallback_preview {
+      return fallback_preview_generate(&self.state_store, &exclude_keys, seed);
+    }
+
+    // ── Level 1: strict matching with default_texts supplementation ──
+    let candidates = collect_candidates(
+      &self.state_store,
+      &exclude_keys,
+      include_disabled,
+      require_images,
+      min_texts,
+      max_texts,
+      input_images,
+      input_texts,
+      &base_texts,
+      prefer_type,
+      TextMatchMode::Strict,
+    )?;
+
+    let (result, _) =
+      try_generate_candidates(&self.state_store, &candidates, &base_images, &base_options, seed);
+    if let Some(r) = result {
+      return Ok(r);
+    }
+
+    // ── Level 2: relaxed text matching — include candidates even when
+    // default_texts cannot fully supplement, let the engine try ──
+    let candidates = collect_candidates(
+      &self.state_store,
+      &exclude_keys,
+      include_disabled,
+      require_images,
+      min_texts,
+      max_texts,
+      input_images,
+      input_texts,
+      &base_texts,
+      prefer_type,
+      TextMatchMode::Relaxed,
+    )?;
+
+    let (result, last_error) =
+      try_generate_candidates(&self.state_store, &candidates, &base_images, &base_options, seed);
+    if let Some(r) = result {
+      return Ok(r);
+    }
+
+    // ── Level 3: fallback preview ──
+    if fallback_preview {
+      return fallback_preview_generate(&self.state_store, &exclude_keys, seed);
     }
 
     Err(new_coded_error(
       CODE_RANDOM_GENERATION_FAILED,
       format!(
-        "all {} candidates failed, last error: {}",
-        candidates.len(),
+        "all candidates failed (level1+level2), last error: {}",
         last_error.unwrap_or_else(|| "unknown".to_string())
       ),
       Status::GenericFailure,
@@ -922,6 +944,273 @@ fn filter_enabled_keys(state_store: &StateStore, keys: Vec<String>) -> Result<Ve
   Ok(out)
 }
 
+// ---------------------------------------------------------------------------
+// Random generation helpers
+// ---------------------------------------------------------------------------
+
+/// Classification of the user's input based on what they provided.
+#[derive(Clone, Copy, PartialEq)]
+enum InputType {
+  ImageOnly,
+  TextOnly,
+  Both,
+  None,
+}
+
+/// How strictly to match text requirements when collecting candidates.
+#[derive(Clone, Copy, PartialEq)]
+enum TextMatchMode {
+  /// Strict: user texts must be within [min_texts, max_texts].
+  /// If user texts < min_texts, try supplementing with default_texts.
+  /// If supplementation fails, skip the candidate.
+  Strict,
+  /// Relaxed: user texts must be <= max_texts.
+  /// If user texts < min_texts, try supplementing with default_texts first.
+  /// If supplementation fails, still include the candidate with user texts as-is —
+  /// the underlying engine may handle it better than we can.
+  Relaxed,
+}
+
+/// A candidate for random generation, carrying the final texts (possibly
+/// supplemented with `default_texts`) that should be used if this candidate
+/// is selected.
+struct RandomCandidate {
+  key: String,
+  texts: Vec<String>,
+}
+
+/// Build the final text list by supplementing user texts with `default_texts`
+/// when the user hasn't provided enough.  Returns `None` when `default_texts`
+/// cannot satisfy the minimum requirement.
+fn build_texts_with_defaults(
+  user_texts: &[String],
+  min_texts: u32,
+  max_texts: u32,
+  default_texts: &[String],
+) -> Option<Vec<String>> {
+  let user_count = user_texts.len() as u32;
+  if user_count >= min_texts {
+    let mut result = user_texts.to_vec();
+    result.truncate(max_texts as usize);
+    return Some(result);
+  }
+  let needed = (min_texts - user_count) as usize;
+  if default_texts.len() < needed {
+    return None;
+  }
+  let mut result = user_texts.to_vec();
+  result.extend_from_slice(&default_texts[..needed]);
+  result.truncate(max_texts as usize);
+  Some(result)
+}
+
+/// Resolve the effective preference type from user filter and input.
+fn resolve_prefer_type(input_type: InputType, filter_prefer: Option<&str>) -> InputType {
+  match filter_prefer {
+    Some(t) => match t {
+      "image" => InputType::ImageOnly,
+      "text" => InputType::TextOnly,
+      _ => InputType::Both, // "any" or invalid → no type filtering
+    },
+    None => match input_type {
+      InputType::ImageOnly => InputType::ImageOnly,
+      InputType::TextOnly => InputType::TextOnly,
+      InputType::Both | InputType::None => InputType::Both,
+    },
+  }
+}
+
+/// Collect candidate memes matching the given constraints.
+///
+/// `text_mode` controls how text requirements are matched:
+/// - `Strict`: user texts must fall within [min_texts, max_texts], with
+///   `default_texts` supplementation allowed when user texts < min_texts.
+/// - `Relaxed`: user texts must be <= max_texts. When user texts < min_texts,
+///   supplementation is attempted; if it fails the candidate is still included
+///   with user texts as-is, letting the underlying engine decide.
+fn collect_candidates(
+  state_store: &StateStore,
+  exclude_keys: &[String],
+  include_disabled: bool,
+  require_images: bool,
+  min_texts: u32,
+  max_texts: u32,
+  input_images: u32,
+  input_texts: u32,
+  base_texts: &[String],
+  prefer_type: InputType,
+  text_mode: TextMatchMode,
+) -> Result<Vec<RandomCandidate>> {
+  let mut candidates = Vec::new();
+  for meme in get_memes() {
+    let key = meme.key();
+    if exclude_keys.iter().any(|k| k == &key) {
+      continue;
+    }
+    if !include_disabled && !state_store.is_enabled(&key)? {
+      continue;
+    }
+    let info = meme.info();
+    let p = &info.params;
+
+    // Type preference filter
+    match prefer_type {
+      InputType::ImageOnly => {
+        if p.max_images == 0 {
+          continue;
+        }
+      }
+      InputType::TextOnly => {
+        if p.max_texts == 0 {
+          continue;
+        }
+      }
+      InputType::Both | InputType::None => {}
+    }
+
+    if require_images && p.max_images == 0 {
+      continue;
+    }
+
+    // Custom min/max texts from filter override
+    if (p.max_texts as u32) < min_texts || (p.min_texts as u32) > max_texts {
+      continue;
+    }
+
+    // Image count must always be in range
+    if input_images < p.min_images as u32 || input_images > p.max_images as u32 {
+      continue;
+    }
+
+    // Text matching
+    if input_texts > p.max_texts as u32 {
+      continue;
+    }
+
+    if input_texts < p.min_texts as u32 {
+      // Try supplementing with default_texts
+      match build_texts_with_defaults(base_texts, p.min_texts as u32, p.max_texts as u32, &p.default_texts) {
+        Some(texts) => {
+          candidates.push(RandomCandidate { key, texts });
+        }
+        None => {
+          // Supplementation failed
+          if text_mode == TextMatchMode::Relaxed {
+            // Still include the candidate with user texts as-is.
+            // The underlying engine may have its own default_texts handling.
+            candidates.push(RandomCandidate {
+              key,
+              texts: base_texts.to_vec(),
+            });
+          }
+          // Strict mode: skip this candidate
+        }
+      }
+    } else {
+      // User texts are within [min_texts, max_texts]
+      let mut texts = base_texts.to_vec();
+      texts.truncate(p.max_texts as usize);
+      candidates.push(RandomCandidate { key, texts });
+    }
+  }
+  Ok(candidates)
+}
+
+/// Try generating a meme from each candidate in random order.
+/// Returns the first successful result, or the last error message.
+fn try_generate_candidates(
+  state_store: &StateStore,
+  candidates: &[RandomCandidate],
+  base_images: &[Image],
+  base_options: &HashMap<String, OptionValue>,
+  seed: usize,
+) -> (Option<GenerateMemeResult>, Option<String>) {
+  if candidates.is_empty() {
+    return (None, None);
+  }
+  let start = seed % candidates.len();
+  let mut last_error = None;
+  for i in 0..candidates.len() {
+    let candidate = &candidates[(start + i) % candidates.len()];
+    match generate_meme_by_parts(
+      state_store,
+      &candidate.key,
+      base_images,
+      &candidate.texts,
+      base_options,
+    ) {
+      Ok(result) => return (Some(result), None),
+      Err(err) => {
+        last_error = Some(err.to_string());
+      }
+    }
+  }
+  (None, last_error)
+}
+
+/// Fallback: try generating a preview from a random enabled meme (excluding
+/// `exclude_keys`).  Iterates through all enabled memes in random order until
+/// one succeeds.
+fn fallback_preview_generate(
+  state_store: &StateStore,
+  exclude_keys: &[String],
+  seed: usize,
+) -> Result<GenerateMemeResult> {
+  let keys: Vec<String> = get_meme_keys()
+    .into_iter()
+    .map(ToOwned::to_owned)
+    .filter(|k| !exclude_keys.iter().any(|e| e == k))
+    .filter(|k| state_store.is_enabled(k).unwrap_or(false))
+    .collect();
+
+  if keys.is_empty() {
+    return Err(new_coded_error(
+      CODE_RANDOM_GENERATION_FAILED,
+      "no enabled memes available for fallback preview".to_string(),
+      Status::GenericFailure,
+    ));
+  }
+
+  let start = seed % keys.len();
+  let mut last_error = None;
+  for i in 0..keys.len() {
+    let key = &keys[(start + i) % keys.len()];
+    let meme = match get_meme(key) {
+      Some(m) => m,
+      None => continue,
+    };
+    let default_options = default_options_from_info(&meme.info());
+    match catch_panic(|| meme.generate_preview(default_options))
+      .and_then(map_meme_err)
+      .map_err(bridge_err)
+    {
+      Ok(buffer) => {
+        return Ok(GenerateMemeResult {
+          key: key.clone(),
+          mime: detect_mime(&buffer).to_string(),
+          used_images: 0,
+          used_texts: 0,
+          buffer: buffer.into(),
+          fallback: true,
+        });
+      }
+      Err(err) => {
+        last_error = Some(err.to_string());
+      }
+    }
+  }
+
+  Err(new_coded_error(
+    CODE_RANDOM_GENERATION_FAILED,
+    format!(
+      "fallback preview also failed for all {} memes, last error: {}",
+      keys.len(),
+      last_error.unwrap_or_else(|| "unknown".to_string())
+    ),
+    Status::GenericFailure,
+  ))
+}
+
 fn generate_meme_by_parts(
   state_store: &StateStore,
   key: &str,
@@ -964,6 +1253,7 @@ fn generate_meme_by_parts(
     used_images: images.len() as u32,
     used_texts: texts.len() as u32,
     buffer: buffer.into(),
+    fallback: false,
   })
 }
 

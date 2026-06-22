@@ -131,3 +131,4 @@ const { instance: __napiInstance, module: __wasiModule, napiModule: __napiModule
 })
 module.exports = __napiModule.exports
 module.exports.MemeGenerator = __napiModule.exports.MemeGenerator
+module.exports.plus100 = __napiModule.exports.plus100

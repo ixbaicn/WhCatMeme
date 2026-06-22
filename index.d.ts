@@ -53,6 +53,12 @@ export interface GenerateMemeResult {
   mime: string
   usedImages: number
   usedTexts: number
+  /**
+   * True when this result was produced by the fallback preview path
+   * (all normal candidates failed, so a random meme preview was generated instead).
+   * When `true`, `used_images` and `used_texts` are both 0.
+   */
+  fallback: boolean
 }
 
 export interface GenerateRandomPayload {
@@ -132,12 +138,21 @@ export interface ParserFlagsDto {
   longAliases: Array<string>
 }
 
+export declare function plus100(input: number): number
+
 export interface RandomGenerateFilter {
   requireImages?: boolean
   minTexts?: number
   maxTexts?: number
   excludeKeys?: Array<string>
   includeDisabled?: boolean
+  /**
+   * Preference type filter: "image" | "text" | "any".
+   * When not set, inferred from input (images→"image", texts→"text", both/none→"any").
+   */
+  preferType?: string
+  /** Whether to allow preview fallback when all candidates fail. Default: true. */
+  fallbackPreview?: boolean
 }
 
 export interface ResourceStatus {

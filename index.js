@@ -78,8 +78,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-android-arm64')
-        const bindingPackageVersion = require('@napi-rs/package-template-android-arm64/package.json').version
+        const binding = require('WhCatMeme-android-arm64')
+        const bindingPackageVersion = require('WhCatMeme-android-arm64/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -94,8 +94,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-android-arm-eabi')
-        const bindingPackageVersion = require('@napi-rs/package-template-android-arm-eabi/package.json').version
+        const binding = require('WhCatMeme-android-arm-eabi')
+        const bindingPackageVersion = require('WhCatMeme-android-arm-eabi/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -114,8 +114,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-win32-x64-msvc')
-        const bindingPackageVersion = require('@napi-rs/package-template-win32-x64-msvc/package.json').version
+        const binding = require('WhCatMeme-win32-x64-msvc')
+        const bindingPackageVersion = require('WhCatMeme-win32-x64-msvc/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -130,8 +130,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-win32-ia32-msvc')
-        const bindingPackageVersion = require('@napi-rs/package-template-win32-ia32-msvc/package.json').version
+        const binding = require('WhCatMeme-win32-ia32-msvc')
+        const bindingPackageVersion = require('WhCatMeme-win32-ia32-msvc/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -146,8 +146,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-win32-arm64-msvc')
-        const bindingPackageVersion = require('@napi-rs/package-template-win32-arm64-msvc/package.json').version
+        const binding = require('WhCatMeme-win32-arm64-msvc')
+        const bindingPackageVersion = require('WhCatMeme-win32-arm64-msvc/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -165,8 +165,8 @@ function requireNative() {
       loadErrors.push(e)
     }
     try {
-      const binding = require('@napi-rs/package-template-darwin-universal')
-      const bindingPackageVersion = require('@napi-rs/package-template-darwin-universal/package.json').version
+      const binding = require('WhCatMeme-darwin-universal')
+      const bindingPackageVersion = require('WhCatMeme-darwin-universal/package.json').version
       if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
         throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
       }
@@ -181,8 +181,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-darwin-x64')
-        const bindingPackageVersion = require('@napi-rs/package-template-darwin-x64/package.json').version
+        const binding = require('WhCatMeme-darwin-x64')
+        const bindingPackageVersion = require('WhCatMeme-darwin-x64/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -197,8 +197,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-darwin-arm64')
-        const bindingPackageVersion = require('@napi-rs/package-template-darwin-arm64/package.json').version
+        const binding = require('WhCatMeme-darwin-arm64')
+        const bindingPackageVersion = require('WhCatMeme-darwin-arm64/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -217,8 +217,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-freebsd-x64')
-        const bindingPackageVersion = require('@napi-rs/package-template-freebsd-x64/package.json').version
+        const binding = require('WhCatMeme-freebsd-x64')
+        const bindingPackageVersion = require('WhCatMeme-freebsd-x64/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -233,8 +233,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-freebsd-arm64')
-        const bindingPackageVersion = require('@napi-rs/package-template-freebsd-arm64/package.json').version
+        const binding = require('WhCatMeme-freebsd-arm64')
+        const bindingPackageVersion = require('WhCatMeme-freebsd-arm64/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -254,8 +254,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-x64-musl')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-x64-musl/package.json').version
+          const binding = require('WhCatMeme-linux-x64-musl')
+          const bindingPackageVersion = require('WhCatMeme-linux-x64-musl/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -270,8 +270,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-x64-gnu')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-x64-gnu/package.json').version
+          const binding = require('WhCatMeme-linux-x64-gnu')
+          const bindingPackageVersion = require('WhCatMeme-linux-x64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -288,8 +288,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-arm64-musl')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-arm64-musl/package.json').version
+          const binding = require('WhCatMeme-linux-arm64-musl')
+          const bindingPackageVersion = require('WhCatMeme-linux-arm64-musl/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -304,8 +304,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-arm64-gnu')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-arm64-gnu/package.json').version
+          const binding = require('WhCatMeme-linux-arm64-gnu')
+          const bindingPackageVersion = require('WhCatMeme-linux-arm64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -322,8 +322,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-arm-musleabihf')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-arm-musleabihf/package.json').version
+          const binding = require('WhCatMeme-linux-arm-musleabihf')
+          const bindingPackageVersion = require('WhCatMeme-linux-arm-musleabihf/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -338,8 +338,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-arm-gnueabihf')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-arm-gnueabihf/package.json').version
+          const binding = require('WhCatMeme-linux-arm-gnueabihf')
+          const bindingPackageVersion = require('WhCatMeme-linux-arm-gnueabihf/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -356,8 +356,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-loong64-musl')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-loong64-musl/package.json').version
+          const binding = require('WhCatMeme-linux-loong64-musl')
+          const bindingPackageVersion = require('WhCatMeme-linux-loong64-musl/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -372,8 +372,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-loong64-gnu')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-loong64-gnu/package.json').version
+          const binding = require('WhCatMeme-linux-loong64-gnu')
+          const bindingPackageVersion = require('WhCatMeme-linux-loong64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -390,8 +390,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-riscv64-musl')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-riscv64-musl/package.json').version
+          const binding = require('WhCatMeme-linux-riscv64-musl')
+          const bindingPackageVersion = require('WhCatMeme-linux-riscv64-musl/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -406,8 +406,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@napi-rs/package-template-linux-riscv64-gnu')
-          const bindingPackageVersion = require('@napi-rs/package-template-linux-riscv64-gnu/package.json').version
+          const binding = require('WhCatMeme-linux-riscv64-gnu')
+          const bindingPackageVersion = require('WhCatMeme-linux-riscv64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -423,8 +423,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-linux-ppc64-gnu')
-        const bindingPackageVersion = require('@napi-rs/package-template-linux-ppc64-gnu/package.json').version
+        const binding = require('WhCatMeme-linux-ppc64-gnu')
+        const bindingPackageVersion = require('WhCatMeme-linux-ppc64-gnu/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -439,8 +439,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-linux-s390x-gnu')
-        const bindingPackageVersion = require('@napi-rs/package-template-linux-s390x-gnu/package.json').version
+        const binding = require('WhCatMeme-linux-s390x-gnu')
+        const bindingPackageVersion = require('WhCatMeme-linux-s390x-gnu/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -459,8 +459,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-openharmony-arm64')
-        const bindingPackageVersion = require('@napi-rs/package-template-openharmony-arm64/package.json').version
+        const binding = require('WhCatMeme-openharmony-arm64')
+        const bindingPackageVersion = require('WhCatMeme-openharmony-arm64/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -475,8 +475,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-openharmony-x64')
-        const bindingPackageVersion = require('@napi-rs/package-template-openharmony-x64/package.json').version
+        const binding = require('WhCatMeme-openharmony-x64')
+        const bindingPackageVersion = require('WhCatMeme-openharmony-x64/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -491,8 +491,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@napi-rs/package-template-openharmony-arm')
-        const bindingPackageVersion = require('@napi-rs/package-template-openharmony-arm/package.json').version
+        const binding = require('WhCatMeme-openharmony-arm')
+        const bindingPackageVersion = require('WhCatMeme-openharmony-arm/package.json').version
         if (bindingPackageVersion !== '1.0.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -524,6 +524,7 @@ if (!nativeBinding || process.env.NAPI_RS_FORCE_WASI) {
   if (!nativeBinding) {
     try {
       wasiBinding = require('WhCatMeme-wasm32-wasip1-threads')
+      wasiBinding = require('WhCatMeme-wasm32-wasi')
       nativeBinding = wasiBinding
     } catch (wasip1Err) {
       loadErrors.push(wasip1Err)
@@ -564,4 +565,5 @@ if (!nativeBinding) {
 }
 
 module.exports = nativeBinding
+module.exports.MemeGenerator = nativeBinding.MemeGenerator
 module.exports.plus100 = nativeBinding.plus100

@@ -124,7 +124,7 @@ const meme = new MemeGenerator({
 ## 8. 随机生成（新增）
 
 ### `generateRandom(payload?: GenerateRandomPayload): GenerateMemeResult`
-内置随机生成，支持过滤条件。
+内置随机生成，支持过滤条件和智能类型筛选。
 
 `payload.filters` 支持：
 - `requireImages?: boolean`
@@ -132,11 +132,27 @@ const meme = new MemeGenerator({
 - `maxTexts?: number`
 - `excludeKeys?: string[]`
 - `includeDisabled?: boolean`
+- `preferType?: 'image' | 'text' | 'any'` — 偏好类型筛选：
+  - `'image'`：只从图片型表情包（max_images > 0）中随机
+  - `'text'`：只从文本型表情包（max_texts > 0）中随机
+  - `'any'`：不区分类型
+  - 不传时根据输入自动推断（有图片→image，有文本→text，都有/都没有→any）
+- `fallbackPreview?: boolean` — 是否允许预览兜底（默认 `true`）
+  - 当所有候选生成失败时，回退到随机生成一个表情包预览图
+  - 设为 `false` 可禁用此行为，保持原有的报错逻辑
 
 `payload` 同时可带：
 - `images?: InputImagePayload[]`
 - `texts?: string[]`
 - `options?: Record<string, boolean | string | number>`
+
+改进说明：
+- 支持通过 `default_texts` 自动补充缺失文本，大幅增加匹配成功率
+- 传入图片时优先匹配图片型表情包，传入文本时优先匹配文本型表情包
+- 不传任何内容时直接走预览兜底，返回随机表情包预览图
+- 当严格匹配无候选时，会逐步放宽条件（三级回退策略）
+- 默认启用预览兜底，确保 `generateRandom` 几乎不会报错
+- 返回结果新增 `fallback` 字段，标记是否为兜底预览结果
 
 ## 9. 图像工具接口
 

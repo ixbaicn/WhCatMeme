@@ -124,7 +124,7 @@ Deployment note:
 ## 8. Random Generation (New)
 
 ### `generateRandom(payload?: GenerateRandomPayload): GenerateMemeResult`
-Built-in random generation with filters.
+Built-in random generation with filters and smart type-based selection.
 
 `payload.filters`:
 - `requireImages?: boolean`
@@ -132,11 +132,27 @@ Built-in random generation with filters.
 - `maxTexts?: number`
 - `excludeKeys?: string[]`
 - `includeDisabled?: boolean`
+- `preferType?: 'image' | 'text' | 'any'` — Preference type filter:
+  - `'image'`: only randomize from image-type memes (max_images > 0)
+  - `'text'`: only randomize from text-type memes (max_texts > 0)
+  - `'any'`: no type filtering
+  - When omitted, auto-inferred from input (images→image, texts→text, both/none→any)
+- `fallbackPreview?: boolean` — Whether to allow preview fallback when all candidates fail (default: `true`)
+  - Falls back to generating a random meme preview when all candidates fail
+  - Set to `false` to disable fallback and preserve the original error behavior
 
 `payload` can also include:
 - `images?: InputImagePayload[]`
 - `texts?: string[]`
 - `options?: Record<string, boolean | string | number>`
+
+Improvements:
+- Supports auto-supplementing missing texts via `default_texts`, greatly increasing match success rate
+- Prioritizes image-type memes when images are provided, text-type memes when texts are provided
+- When no images or texts are provided, goes directly to fallback preview
+- Gradually relaxes matching criteria when strict matching yields no candidates (3-level fallback strategy)
+- Preview fallback enabled by default, ensuring `generateRandom` almost never throws errors
+- Result includes a `fallback` field indicating whether the result is a fallback preview
 
 ## 9. Image Tool APIs
 
